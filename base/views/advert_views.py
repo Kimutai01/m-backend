@@ -28,6 +28,7 @@ def createAdvert(request):
     advert = Advert.objects.create(
         user=user,
         title='Sample Name',
+        image = 'https://storage.googleapis.com/proudcity/mebanenc/uploads/2021/03/placeholder-image.png',
         description=''
     )
     serializer = AdvertSerializer(advert, many=False)
@@ -40,6 +41,7 @@ def updateAdvert(request, pk):
     advert = Advert.objects.get(_id=pk)
     advert.title = data['title']
     advert.description = data['description']
+    advert.image = data['image']
     advert.save()
     serializer = AdvertSerializer(advert, many=False)
     return Response(serializer.data)
@@ -54,7 +56,9 @@ def deleteAdvert(request, pk):
 @api_view(['POST'])
 def uploadImage(request):
     data = request.data
-    adverts_id = data['adverts_id']
+    print('data: ', data)
+    adverts_id = data['news_id']
+    
     advert = Advert.objects.get(_id=adverts_id)
     
     advert.image = request.FILES.get('image')

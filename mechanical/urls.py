@@ -28,6 +28,13 @@ urlpatterns = [
     path('api/orders/', include('base.urls.order_urls')),
     path('api/news/', include('base.urls.news_urls')),
     path('api/adverts/', include('base.urls.advert_urls')),
+    path('api/teams/', include('base.urls.team_urls')),
+    path('api/matches/', include('base.urls.match_urls')),
+    path('api/fixtures/', include('base.urls.fixture_urls')),
+    path('api/table/', include('base.urls.table_urls')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns +=static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+

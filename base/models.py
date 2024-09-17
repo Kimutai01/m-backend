@@ -7,8 +7,7 @@ from django.contrib.auth.models import User
 class Product(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     name = models.CharField(max_length=200, null=True, blank=True)
-    image = models.ImageField(null=True, blank=True,
-                              default='/placeholder.png')
+    image = models.CharField(max_length=200, null=True, blank=True,  default='https://storage.googleapis.com/proudcity/mebanenc/uploads/2021/03/placeholder-image.png')
     
     description = models.TextField(null=True, blank=True)
    
@@ -63,7 +62,6 @@ class OrderItem(models.Model):
 
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
     order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True)
-
     name = models.CharField(max_length=200, null=True, blank=True)
     size = models.CharField(max_length=200, null=True, blank=True)
     qty = models.IntegerField(null=True, blank=True, default=0)
@@ -96,8 +94,7 @@ class New(models.Model):
     title = models.CharField(max_length=200, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
     category = models.CharField(max_length=200, null=True, blank=True)
-    image = models.ImageField(null=True, blank=True,
-                              default='/placeholder.png')
+    image = models.CharField(max_length=200, null=True, blank=True, default='https://storage.googleapis.com/proudcity/mebanenc/uploads/2021/03/placeholder-image.png')
     createdAt = models.DateTimeField(auto_now_add=True)
     _id = models.AutoField(primary_key=True, editable=False)
 
@@ -108,10 +105,63 @@ class Advert(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     title = models.CharField(max_length=200, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
-    image = models.ImageField(null=True, blank=True,
-                              default='/placeholder.png')
+    image = models.CharField(max_length=200, null=True, blank=True, default='https://storage.googleapis.com/proudcity/mebanenc/uploads/2021/03/placeholder-image.png')
     createdAt = models.DateTimeField(auto_now_add=True)
     _id = models.AutoField(primary_key=True, editable=False)
 
     def __str__(self):
         return str(self.title)
+    
+class Team(models.Model):
+    name = models.CharField(max_length=200, null=True, blank=True)
+    logo = models.CharField(max_length=200, null=True, blank=True, default='https://storage.googleapis.com/proudcity/mebanenc/uploads/2021/03/placeholder-image.png')
+    _id = models.AutoField(primary_key=True, editable=False)
+    
+    def __str__(self):
+        return str(self.name)
+    
+class Match(models.Model):
+    team1 = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True, related_name='team1')
+    team2 = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True, related_name='team2')
+    team1_score = models.IntegerField(null=True, blank=True, default=0)
+    team2_score = models.IntegerField(null=True, blank=True, default=0)
+    date = models.DateField(auto_now_add=False, null=True, blank=True)
+    time = models.TimeField(auto_now_add=False, null=True, blank=True)
+    category = models.CharField(max_length=200, null=True, blank=True)
+    stadium = models.CharField(max_length=200, null=True, blank=True, default='St Sebastian Park')
+    _id = models.AutoField(primary_key=True, editable=False)
+    
+    def day(self):
+        return self.date.strftime('%d')
+    
+    
+    def __str__(self):
+        return str(self.team1) + ' vs ' + str(self.team2)
+    
+class Fixture(models.Model):
+    team1 = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True, related_name='team1_fixture')
+    team2 = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True, related_name='team2_fixture')
+    date = models.DateField(auto_now_add=False, null=True, blank=True)
+    time = models.TimeField(auto_now_add=False, null=True, blank=True)
+    category = models.CharField(max_length=200, null=True, blank=True)
+    stadium = models.CharField(max_length=200, null=True, blank=True)
+    _id = models.AutoField(primary_key=True, editable=False)
+    
+    def __str__(self):
+        return str(self.team1) + ' vs ' + str(self.team2)
+    
+    
+class Table(models.Model):
+    team = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True, related_name='team_table')
+    played = models.IntegerField(null=True, blank=True, default=0)
+    won = models.IntegerField(null=True, blank=True, default=0)
+    drawn = models.IntegerField(null=True, blank=True, default=0)
+    lost = models.IntegerField(null=True, blank=True, default=0)
+    goals_for = models.IntegerField(null=True, blank=True, default=0)
+    goals_against = models.IntegerField(null=True, blank=True, default=0)
+    goal_difference = models.IntegerField(null=True, blank=True, default=0)
+    points = models.IntegerField(null=True, blank=True, default=0)
+    _id = models.AutoField(primary_key=True, editable=False)
+    
+    def __str__(self):
+        return str(self.team)

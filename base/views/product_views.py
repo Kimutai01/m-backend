@@ -19,7 +19,7 @@ def createProduct(request):
         user=user,
         name='Sample Name',
         price=0,
-    
+        image = 'https://storage.googleapis.com/proudcity/mebanenc/uploads/2021/03/placeholder-image.png',
         countInStock=0,
         description=''
     )
@@ -50,13 +50,16 @@ def getProduct(request, pk):
 @api_view(['PUT'])
 @permission_classes([IsAdminUser])
 def updateProduct(request, pk):
+    
 
     data = request.data
+
     product = Product.objects.get(_id=pk)
     product.name = data['name']
     product.price = data['price']
     product.countInStock = data['countInStock']
     product.description = data['description']
+    product.image = data['image']
 
     product.save()
     serializer = ProductSerializer(product, many=False)

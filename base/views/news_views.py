@@ -29,6 +29,7 @@ def createNew(request):
         user=user,
         title='Sample Name',
         category='Sample Category',
+        image = 'https://storage.googleapis.com/proudcity/mebanenc/uploads/2021/03/placeholder-image.png',
         description=''
     )
     serializer = NewSerializer(new, many=False)
@@ -42,6 +43,7 @@ def updateNew(request, pk):
     new.title = data['title']
     new.description = data['description']
     new.category = data['category']
+    new.image = data['image']
     new.save()
     serializer = NewSerializer(new, many=False)
     return Response(serializer.data)
